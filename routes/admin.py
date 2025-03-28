@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from models.user import User
 from models.post import Post
 from models.product import Product
-from app import db
+from extensions import db
 from utils import security
 import os
 import logging
@@ -20,6 +20,7 @@ admin_handler = logging.FileHandler('admin_ui.log')
 admin_handler.setLevel(logging.INFO)
 admin_logger.addHandler(admin_handler)
 admin_logger.propagate = False
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

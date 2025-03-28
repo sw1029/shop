@@ -1,9 +1,25 @@
-<h1>게시판</h1>
-{% for post in posts %}
-    <div>
-        <h3>{{ post.title }}</h3>
-        <p>{{ post.content }}</p>
-        <small>작성자: {{ post.author }} | 작성일: {{ post.created_at }}</small>
-    </div>
-{% endfor %}
-<a href="/post">글쓰기</a>
+<a href="{{ url_for('board.post') }}">
+    <button>게시글 작성</button>
+</a>
+
+{% if posts %}
+    {% for post in posts %}
+        <div style="border: 1px solid #ccc; margin-bottom: 20px; padding: 10px;">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+            <p>작성자: {{ post.author }}</p>
+
+            <form method="POST" action="{{ url_for('board.comment', post_id=post.id) }}" style="margin-top: 10px;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="text" name="content" placeholder="댓글을 입력하세요" required>
+                <button type="submit">댓글 등록</button>
+            </form>
+
+            {% for comment in post.comments %}
+                <p style="margin-left: 20px;">💬 {{ comment.author }}: {{ comment.content }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>작성된 게시글이 없습니다.</p>
+{% endif %}

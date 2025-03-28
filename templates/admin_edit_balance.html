@@ -1,0 +1,8 @@
+<h2>잔액 수정 - {{ target_user.username }}</h2>
+<form method="POST" style="display: flex; flex-direction: column; max-width: 300px; gap: 8px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>현재 잔액: {{ target_user.balance }} 원</label>
+    <input type="number" name="balance" step="0.01" placeholder="새 잔액" required>
+    <button type="submit">수정</button>
+</form>
+<a href="/">← 메인으로 돌아가기</a>

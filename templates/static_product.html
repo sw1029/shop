@@ -1,0 +1,7 @@
+<h2>{{ product.name }}</h2>
+<p>가격: {{ product.price }} 원</p>
+<p>설명: {{ product.description }}</p>
+{% if product.image_path %}
+    <img src="/{{ product.image_path }}" alt="상품 이미지" width="300">
+{% endif %}
+<a href="/">← 메인으로 돌아가기</a>

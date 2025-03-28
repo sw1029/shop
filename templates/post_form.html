@@ -1,5 +1,6 @@
-<form method="POST">
-    <input type="text" name="title" placeholder="제목" required><br>
-    <textarea name="content" placeholder="내용" required></textarea><br>
-    <button type="submit">등록</button>
+<form method="POST" style="display: flex; flex-direction: column; max-width: 400px; gap: 8px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="title" placeholder="제목" required>
+    <textarea name="content" placeholder="내용" required></textarea>
+    <button type="submit">작성</button>
 </form>

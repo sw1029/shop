@@ -14,35 +14,70 @@
 ## 프로젝트 구조
 
 ```plaintext
-project/
+shop/
+├── app.py
+├── config.py
+├── create_admin.py
+├── extensions.py
+├── init_db.py
+├── requirements.txt
+├── README.md
 │
-├── app.py                  # 앱 실행 파일 (Flask 인스턴스 실행)
-├── config.py               # 환경 설정
-├── requirements.txt        # 의존성 명시
-│
-├── models/                 # 데이터베이스 모델
-│   └── user.py
-│   └── post.py
-│   └── product.py
-│
-├── routes/                 # 라우팅 핸들러
-│   └── auth.py
-│   └── board.py
-│   └── product.py
-│   └── admin.py
-│
-├── templates/              # HTML 템플릿
-│   └── base.html
-│   └── login.html
-│   └── board_list.html
-│   └── product_form.html
-│
-├── static/                 # 정적 파일 (CSS, JS, 이미지)
-│
-├── forms/                  # Flask-WTF 폼
-│   └── login_form.py
+├── forms/
+│   ├── login_form.py
 │   └── product_form.py
 │
-└── utils/                  # 도우미 함수 (보안, 필터 등)
-    └── security.py
+├── instance/
+│   └── db
+│
+├── models/
+│   ├── comment.py
+│   ├── post.py
+│   ├── product.py
+│   └── user.py
+│
+├── routes/
+│   ├── admin.py
+│   ├── auth.py
+│   ├── board.py
+│   ├── main.py
+│   ├── product.py
+│   ├── static_product.py
+│   └── transfer.py
+│
+├── templates/
+│   ├── admin/
+│   │   ├── edit_post.html
+│   │   ├── edit_product.html
+│   │   └── product_form.html
+│   ├── admin_dashboard.html
+│   ├── admin_edit_balance.html
+│   ├── admin_users.html
+│   ├── base.html
+│   ├── board_list.html
+│   ├── edit_product.html
+│   ├── login.html
+│   ├── main.html
+│   ├── post_form.html
+│   ├── product_form.html
+│   ├── product_list.html
+│   ├── register.html
+│   ├── static_product.html
+│   └── transfer.html
+│
+├── utils/
+│   └── security.py
+│
+└── static/
+    └── (정적 파일: 이미지, CSS 등)
 
+```
+## 사용 방법
+- pip install -m requirements.txt
+
+- python init_db.py
+
+- create_admin에서 관리자 id, pw 설정
+- python create_admin.py
+
+이후 app.py 실행 후 127.0.0.1:5000 으로 접속 시 정상적으로 실행됩니다.

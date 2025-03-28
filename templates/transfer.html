@@ -1,0 +1,6 @@
+<form method="POST" style="display: flex; flex-direction: column; max-width: 300px; gap: 8px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="recipient" placeholder="받는 사람 아이디" required>
+    <input type="number" name="amount" step="0.01" placeholder="송금 금액" required>
+    <button type="submit">송금하기</button>
+</form>

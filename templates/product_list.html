@@ -1,0 +1,14 @@
+<h2>전체 상품 목록</h2>
+<ul>
+  {% for product in products %}
+    <li>
+      <a href="{{ url_for('static_product_page', product_id=product.id) }}">
+        {{ product.name }}
+      </a> - {{ product.price }}원
+    </li>
+  {% endfor %}
+</ul>
+
+{% if not products %}
+  <p>등록된 상품이 없습니다.</p>
+{% endif %}

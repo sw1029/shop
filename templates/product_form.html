@@ -1,7 +1,8 @@
-<form method="POST" enctype="multipart/form-data">
-    <input type="text" name="name" placeholder="상품명" required><br>
-    <input type="number" step="0.01" name="price" placeholder="가격" required><br>
-    <textarea name="description" placeholder="설명"></textarea><br>
-    <input type="file" name="image"><br>
+<form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; max-width: 400px; gap: 8px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="name" placeholder="상품명" required>
+    <input type="number" step="0.01" name="price" placeholder="가격" required>
+    <textarea name="description" placeholder="설명"></textarea>
+    <input type="file" name="image">
     <button type="submit">상품 등록</button>
 </form>

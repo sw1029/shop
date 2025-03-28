@@ -1,6 +1,18 @@
-<form method="POST">
-    <input type="text" name="username" placeholder="Username" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <button type="submit">Login</button>
+<form method="POST" style="display: flex; flex-direction: column; max-width: 300px; gap: 8px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="username" placeholder="아이디" required>
+    <input type="password" name="password" placeholder="비밀번호" required>
+    <button type="submit">로그인</button>
 </form>
-<p>아직 회원이 아니라면? <a href="/auth/register">회원가입</a></p>
+
+<a href="{{ url_for('auth.register') }}" style="
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 4px;
+    width: fit-content;
+">회원가입</a>

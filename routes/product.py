@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_required, current_user
 from models.product import Product
-from app import db
+from extensions import db
 from utils import security
 import os
 import logging
@@ -13,7 +13,6 @@ UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 MAX_IMAGE_SIZE_MB = 5
 
-# 관리자 로그 추적
 admin_logger = logging.getLogger('admin_logger')
 admin_handler = logging.FileHandler('admin_ui.log')
 admin_handler.setLevel(logging.INFO)

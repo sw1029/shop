@@ -1,0 +1,26 @@
+<h2>전체 유저 관리</h2>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>아이디</th>
+        <th>관리자 여부</th>
+        <th>차단 여부</th>
+        <th>잔액</th>
+        <th>작업</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ '✅' if user.is_admin else '❌' }}</td>
+        <td>{{ '🚫' if user.is_blocked else '✔️' }}</td>
+        <td>{{ user.balance }}</td>
+        <td>
+            <a href="{{ url_for('main.edit_balance', user_id=user.id) }}">잔액 수정</a> |
+            <a href="{{ url_for('main.toggle_block', user_id=user.id) }}">차단 전환</a> |
+            <a href="{{ url_for('main.reset_password', user_id=user.id) }}">비밀번호 초기화</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="/">← 메인으로</a>

@@ -1,26 +1,21 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, current_app
 from flask_login import login_user, logout_user, current_user
 from models.user import User
-from app import db, login_manager, app
-from werkzeug.security import check_password_hash
+from extensions import db, login_manager
+from utils import security
 import time
 import logging
-from utils import security
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
-
+# 로그 설정
 admin_logger = logging.getLogger('admin_logger')
-admin_handler = logging.FileHandler('admin_access.log')
-admin_handler.setLevel(logging.INFO)
-admin_logger.addHandler(admin_handler)
+admin_logger.setLevel(logging.INFO)
+if not admin_logger.handlers:
+    admin_logger.addHandler(logging.FileHandler('admin_access.log'))
 
 activity_logger = logging.getLogger('activity_logger')
-activity_handler = logging.FileHandler(app.config['USER_ACTIVITY_LOG'])
-activity_handler.setLevel(logging.INFO)
-activity_logger.addHandler(activity_handler)
+activity_logger.setLevel(logging.INFO)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -28,11 +23,14 @@ def load_user(user_id):
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if not activity_logger.handlers:
+        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+        activity_logger.addHandler(activity_handler)
+
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password']
 
-        # 로그인 시도 제한
         attempts = session.get('login_attempts', 0)
         locked_until = session.get('locked_until', 0)
 
@@ -41,19 +39,19 @@ def login():
             return render_template('login.html')
 
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password_hash, password) and not user.is_blocked:
+        if user and user.check_password(password) and not user.is_blocked:
             login_user(user)
             session['login_attempts'] = 0
-            client_ip = security.get_client_ip()
-            activity_logger.info(f'사용자 로그인: {user.username} from {client_ip}')
+            ip = security.get_client_ip()
+            activity_logger.info(f'로그인: {username} from {ip}')
             if user.is_admin:
-                admin_logger.info(f'관리자 로그인: {user.username} from {client_ip}')
-            return redirect(url_for('board.index'))
+                admin_logger.info(f'관리자 로그인: {username} from {ip}')
+            return redirect(url_for('main.home'))
         else:
             attempts += 1
             session['login_attempts'] = attempts
-            if attempts >= app.config['MAX_LOGIN_ATTEMPTS']:
-                session['locked_until'] = time.time() + app.config['LOGIN_LOCKOUT_TIME']
+            if attempts >= current_app.config['MAX_LOGIN_ATTEMPTS']:
+                session['locked_until'] = time.time() + current_app.config['LOGIN_LOCKOUT_TIME']
                 flash('로그인 시도 초과. 잠시 후 다시 시도해주세요.')
             else:
                 flash('로그인 실패 또는 차단된 사용자입니다.')
@@ -62,13 +60,20 @@ def login():
 @bp.route('/logout')
 def logout():
     if current_user.is_authenticated:
-        client_ip = security.get_client_ip()
-        activity_logger.info(f'사용자 로그아웃: {current_user.username} from {client_ip}')
+        ip = security.get_client_ip()
+        if not activity_logger.handlers:
+            activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+            activity_logger.addHandler(activity_handler)
+        activity_logger.info(f'로그아웃: {current_user.username} from {ip}')
     logout_user()
     return redirect(url_for('auth.login'))
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if not activity_logger.handlers:
+        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+        activity_logger.addHandler(activity_handler)
+
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password']
@@ -84,8 +89,8 @@ def register():
             user.set_password(password)
             db.session.add(user)
             db.session.commit()
-            client_ip = security.get_client_ip()
-            activity_logger.info(f'사용자 회원가입: {user.username} from {client_ip}')
+            ip = security.get_client_ip()
+            activity_logger.info(f'회원가입: {username} from {ip}')
             flash('회원가입 완료. 로그인해주세요.')
             return redirect(url_for('auth.login'))
     return render_template('register.html')
