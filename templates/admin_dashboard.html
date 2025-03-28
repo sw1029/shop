@@ -1,0 +1,17 @@
+<h1>관리자 대시보드</h1>
+
+<h2>사용자 목록</h2>
+{% for user in users %}
+    <p>{{ user.username }} - 차단됨: {{ user.is_blocked }}
+    {% if not user.is_blocked %}<a href="/admin/block/{{ user.id }}">차단</a>{% endif %}</p>
+{% endfor %}
+
+<h2>게시글 목록</h2>
+{% for post in posts %}
+    <p>{{ post.title }} - {{ post.author }} <a href="/admin/delete_post/{{ post.id }}">삭제</a></p>
+{% endfor %}
+
+<h2>상품 목록</h2>
+{% for product in products %}
+    <p>{{ product.name }} - {{ product.price }} <a href="/admin/delete_product/{{ product.id }}">삭제</a></p>
+{% endfor %}
