@@ -5,6 +5,7 @@ from models.user import User
 from extensions import db
 import logging
 from datetime import datetime
+from utils import security
 
 bp = Blueprint('main', __name__)
 
@@ -17,14 +18,46 @@ if not admin_log.handlers:
     admin_log.addHandler(handler)
     admin_log.setLevel(logging.INFO)
 
-@bp.route('/')
+@bp.route('/', methods=['GET', 'POST'])  # ✅ POST 허용
 @login_required
 def home():
     keyword = request.args.get('q', '').strip()
     products = []
+    users = []
+
+    # ✅ 프로필 업데이트 처리
+    if request.method == 'POST':
+        new_bio = request.form.get('bio', '').strip()
+        old_pw = request.form.get('old_password', '')
+        new_pw = request.form.get('new_password', '')
+
+        current_user.bio = new_bio
+
+        if old_pw and new_pw:
+            if not current_user.check_password(old_pw):
+                flash('기존 비밀번호가 일치하지 않습니다.', 'error')
+            elif not security.validate_password_strength(new_pw):
+                flash('비밀번호는 6자 이상이어야 합니다.', 'error')
+            else:
+                current_user.set_password(new_pw)
+                flash('비밀번호가 변경되었습니다.')
+
+        db.session.commit()
+        flash('프로필이 업데이트되었습니다.')
+        return redirect(url_for('main.home'))
+
+    # ✅ 검색 결과 처리 (GET 요청)
     if keyword:
         products = Product.query.filter(Product.name.ilike(f'%{keyword}%')).all()
-    return render_template('main.html', user=current_user, products=products, keyword=keyword)
+        users = User.query.filter(User.username.ilike(f'%{keyword}%')).all()
+
+    return render_template(
+        'main.html',
+        user=current_user,
+        products=products,
+        users=users,
+        keyword=keyword
+    )
 
 @bp.route('/admin/balance/<int:user_id>', methods=['GET', 'POST'])
 @login_required

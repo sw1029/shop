@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_blocked = db.Column(db.Boolean, default=False)
     balance = db.Column(db.Float, default=10000.0)  # 기본 잔액
+    bio = db.Column(db.Text, default='')  # ✅ 자기소개 추가
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

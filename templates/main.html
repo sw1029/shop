@@ -3,6 +3,22 @@
 <a href="{{ url_for('transfer.send') }}">송금하기</a>
 <a href="{{ url_for('auth.logout') }}" style="margin-left: 20px;">로그아웃</a>
 
+<hr>
+<h3>프로필 관리</h3>
+<form method="POST" action="{{ url_for('main.home') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>자기소개:</label><br>
+    <textarea name="bio" rows="3" cols="50">{{ user.bio }}</textarea><br><br>
+
+    <label>기존 비밀번호:</label><br>
+    <input type="password" name="old_password"><br>
+
+    <label>새 비밀번호 (선택):</label><br>
+    <input type="password" name="new_password"><br><br>
+
+    <button type="submit">프로필 저장</button>
+</form>
+
 {% if user.is_admin %}
     <hr>
     <h3>관리자 기능</h3>
@@ -31,23 +47,41 @@
 </ul>
 
 <hr>
-<h3>상품 검색</h3>
+<h3>상품 / 사용자 검색</h3>
 <form method="GET" action="/">
-    <input type="text" name="q" placeholder="상품 이름 검색" value="{{ keyword }}">
+    <input type="text" name="q" placeholder="상품 또는 사용자 이름 검색" value="{{ keyword }}">
     <button type="submit">검색</button>
 </form>
 
-{% if products %}
-    <ul>
-        {% for product in products %}
-            <li>
-                <!-- ✅ 수정된 부분 -->
-                <a href="{{ url_for('static_product.static_product_page', product_id=product.id) }}">
-                    {{ product.name }}
-                </a> - {{ product.price }}원
-            </li>
-        {% endfor %}
-    </ul>
-{% elif keyword %}
-    <p>검색 결과가 없습니다.</p>
+{% if keyword %}
+    {% if products %}
+        <h4>상품 검색 결과:</h4>
+        <ul>
+            {% for product in products %}
+                <li>
+                    <a href="{{ url_for('static_product.static_product_page', product_id=product.id) }}">
+                        {{ product.name }}
+                    </a> - {{ product.price }}원
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if users %}
+        <h4>사용자 검색 결과:</h4>
+        <ul>
+            {% for u in users %}
+                <li>
+                    <strong>{{ u.username }}</strong>
+                    {% if u.bio %}
+                        - {{ u.bio }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if not products and not users %}
+        <p>검색 결과가 없습니다.</p>
+    {% endif %}
 {% endif %}
