@@ -20,8 +20,8 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(board.bp)
 app.register_blueprint(product_routes.bp)
 app.register_blueprint(admin.bp)
-app.register_blueprint(transfer.bp)           # ✅ 추가
-app.register_blueprint(static_product.bp)     # ✅ 추가
+app.register_blueprint(transfer.bp)
+app.register_blueprint(static_product.bp)
 
 if __name__ == '__main__':
     app.run(debug=True)

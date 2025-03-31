@@ -1,4 +1,11 @@
 <h2>전체 유저 관리</h2>
+
+<!-- ✅ 관리자 대시보드로 이동 버튼 -->
+<a href="{{ url_for('admin.dashboard') }}">
+    <button>관리자 대시보드로 이동</button>
+</a>
+<br><br>
+
 <table border="1" cellpadding="6">
     <tr>
         <th>ID</th>
@@ -23,4 +30,5 @@
     </tr>
     {% endfor %}
 </table>
+
 <a href="/">← 메인으로</a>

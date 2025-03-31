@@ -16,7 +16,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 MAX_IMAGE_SIZE_MB = 5
 
 admin_logger = logging.getLogger('admin_logger')
-admin_handler = logging.FileHandler('admin_ui.log')
+admin_handler = logging.FileHandler('admin_ui.log',encoding='utf-8')
 admin_handler.setLevel(logging.INFO)
 admin_logger.addHandler(admin_handler)
 admin_logger.propagate = False

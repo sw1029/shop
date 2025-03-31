@@ -24,7 +24,7 @@ def load_user(user_id):
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if not activity_logger.handlers:
-        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'],encoding='utf-8')
         activity_logger.addHandler(activity_handler)
 
     if request.method == 'POST':
@@ -62,7 +62,7 @@ def logout():
     if current_user.is_authenticated:
         ip = security.get_client_ip()
         if not activity_logger.handlers:
-            activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+            activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'],encoding='utf-8')
             activity_logger.addHandler(activity_handler)
         activity_logger.info(f'로그아웃: {current_user.username} from {ip}')
     logout_user()
@@ -71,7 +71,7 @@ def logout():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if not activity_logger.handlers:
-        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'])
+        activity_handler = logging.FileHandler(current_app.config['USER_ACTIVITY_LOG'],encoding='utf-8')
         activity_logger.addHandler(activity_handler)
 
     if request.method == 'POST':

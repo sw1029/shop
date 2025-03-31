@@ -6,6 +6,15 @@
 {% if user.is_admin %}
     <hr>
     <h3>관리자 기능</h3>
+
+    <!-- ✅ 전체 유저 관리 버튼 -->
+    <a href="{{ url_for('main.user_admin') }}">
+        <button type="button">전체 유저 관리</button>
+    </a>
+
+    <br><br>
+
+    <!-- ✅ 잔액 수정 예시 -->
     <form method="GET" action="/admin/balance/1">
         <label>잔액 수정 (예시: user_id=1)</label>
         <input type="number" name="uid" placeholder="유저 ID">
@@ -32,7 +41,10 @@
     <ul>
         {% for product in products %}
             <li>
-                <a href="{{ url_for('static_product_page', product_id=product.id) }}">{{ product.name }}</a> - {{ product.price }}원
+                <!-- ✅ 수정된 부분 -->
+                <a href="{{ url_for('static_product.static_product_page', product_id=product.id) }}">
+                    {{ product.name }}
+                </a> - {{ product.price }}원
             </li>
         {% endfor %}
     </ul>
